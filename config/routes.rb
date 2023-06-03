@@ -12,4 +12,7 @@ Rails.application.routes.draw do
       # match "*path", to: "api#gone", via: :all
     end
   end
+
+  # 跨域预检请求
+  match '*all', controller: 'application', action: 'cors_preflight_check', via: [:options]
 end

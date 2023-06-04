@@ -29,7 +29,7 @@ class Api::V1::CompletionsController < ApplicationController
     OpenAI.configure do |config|
       config.access_token = ENV.fetch("OPENAI_API_KEY")
       config.organization_id = ENV.fetch("OPENAI_ORGANIZATION_ID") rescue nil
-      config.uri_base = ENV.fetch("OPENAI_API_BASE_URL") rescue nil
+      config.uri_base = ENV.fetch("OPENAI_API_BASE_URL") { 'https://api.openai.com/'}   # 必须http[s] 开头，/ 结尾
       config.request_timeout = 240 # Optional
     end
 

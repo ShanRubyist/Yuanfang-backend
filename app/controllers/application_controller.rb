@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
-  render :json
-
   before_action :cors_set_access_control_headers
+
+  render :json
 
   def cors_preflight_check
     # if request.method == 'OPTIONS'

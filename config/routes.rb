@@ -7,9 +7,14 @@ Rails.application.routes.draw do
 
   # root "users/sessions#new"
 
-  namespace :api, path: nil do
+  namespace :api do
     namespace :v1 do
       # match "*path", to: "api#gone", via: :all
+      resources :completions do
+        collection do
+          post 'achieve' => 'completions#achieve', as: 'achieve'
+        end
+      end
     end
   end
 

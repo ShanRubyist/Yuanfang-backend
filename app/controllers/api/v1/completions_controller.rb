@@ -5,7 +5,7 @@ class Api::V1::CompletionsController < ApplicationController
 
   before_action :authenticate_user!
 
-  attr_reader :client, :sse
+  attr_reader :openai_client_for_openai, :openai_client_for_ails, :openai_client_for_api2d, :sse
 
   def achieve
     raise 'content can not be empty' unless params['content'].present?
@@ -15,6 +15,17 @@ class Api::V1::CompletionsController < ApplicationController
     response.headers["Content-Type"] = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
     begin
+      case params['site']
+      when 'openai'
+        client = openai_client_for_openai
+      when 'api2d'
+        client = openai_client_for_api2d
+      when 'ai.ls'
+        client = openai_client_for_ails
+      else
+        client = openai_client_for_api2d
+      end
+
       client.chat(
         parameters: {
           model: params['model'],
@@ -37,15 +48,27 @@ class Api::V1::CompletionsController < ApplicationController
 
   private
 
-  def client
+  def openai_client(access_token, uri_base = 'https://api.openai.com/', organization_id = '', request_timeout = 240)
     OpenAI.configure do |config|
-      config.access_token = ENV.fetch("OPENAI_API_KEY")
-      config.organization_id = ENV.fetch("OPENAI_ORGANIZATION_ID") rescue nil
-      config.uri_base = ENV.fetch("OPENAI_API_BASE_URL") { 'https://api.openai.com/' } # 必须http[s] 开头，/ 结尾
-      config.request_timeout = 240 # Optional
+      config.access_token = access_token
+      config.uri_base = uri_base
+      config.organization_id = organization_id
+      config.request_timeout = request_timeout
     end
 
-    @client ||= OpenAI::Client.new
+    OpenAI::Client.new
+  end
+
+  def openai_client_for_openai
+    @openai_client_for_openai ||= openai_client(ENV.fetch("OPENAI_API_KEY"), ENV.fetch("OPENAI_API_BASE_URL"), ENV.fetch("OPENAI_ORGANIZATION_ID"))
+  end
+
+  def openai_client_for_ails
+    @openai_client_for_ails ||= openai_client(ENV.fetch("AILS_API_KEY"), ENV.fetch("AILS_API_BASE_URL"), ENV.fetch("OPENAI_ORGANIZATION_ID"))
+  end
+
+  def openai_client_for_api2d
+    @openai_client_for_api2d ||= openai_client(ENV.fetch("API2D_API_KEY"), ENV.fetch("API2D_API_BASE_URL"), ENV.fetch("OPENAI_ORGANIZATION_ID"))
   end
 
   def sse

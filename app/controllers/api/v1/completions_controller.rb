@@ -1,29 +1,37 @@
 require "ruby/openai"
 
 class Api::V1::CompletionsController < ApplicationController
+  include ActionController::Live
+
   before_action :authenticate_user!
 
-  attr_reader :client
+  attr_reader :client, :sse
 
   def achieve
     raise 'content can not be empty' unless params['content'].present?
+    params['model'] ||= "gpt-3.5-turbo"
+    params['temperature'] ||= 1
 
+    response.headers["Content-Type"] = "text/event-stream"
+    response.headers["Last-Modified"] = Time.now.httpdate
     begin
-      response = client.chat(
+      client.chat(
         parameters: {
-          model: "gpt-3.5-turbo",
+          model: params['model'],
           messages: [
             { "role": "system", "content": "假设你是个产品设计师，需要根据用户描述给出设计方案、功能提示文案和免责文案" },
             { "role": "system", "content": "以markdown格式返回" },
             { "role": "user", "content": params['content'] }
           ],
-          temperature: 0.1
+          temperature: params['temperature'],
+          stream: proc do |chunk, _bytesize|
+            sse.write chunk #.dig("choices", 0, "delta", "content")
+          end
         })
-      render json: {
-        answer: response.dig("choices", 0, "message", "content")
-      }
     rescue => e
       render json: e.to_json, status: 500
+    ensure
+      @sse.close
     end
   end
 
@@ -38,5 +46,10 @@ class Api::V1::CompletionsController < ApplicationController
     end
 
     @client ||= OpenAI::Client.new
+  end
+
+  def sse
+    # @sse ||= SSE.new(response.stream, event: "openai", retry: 3000)
+    @sse ||= SSE.new(response.stream)
   end
 end

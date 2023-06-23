@@ -15,7 +15,7 @@ class ApplicationController < ActionController::API
     response.headers['Access-Control-Allow-Origin'] = '*'
 
     # 设置运行浏览器发送的 HTTP 头
-    response.headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token, Auth-Token, Email, X-User-Token, X-User-Email'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token, Auth-Token, Email, X-User-Token, X-User-Email, ResponseType'
 
     # 设置浏览器可以读取到的 HTTP 头
     response.headers['Access-Control-Expose-Headers'] = 'Authorization'

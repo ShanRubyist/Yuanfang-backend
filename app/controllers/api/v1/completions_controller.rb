@@ -26,14 +26,15 @@ class Api::V1::CompletionsController < ApplicationController
         client = openai_client_for_api2d
       end
 
+      message = []
+      prompt = Prompt.find(params['prompt_id']) rescue nil
+      message.push({ "role": "system", "content": prompt.content }) if prompt
+      message.push({ "role": "user", "content": params['content'] })
+
       client.chat(
         parameters: {
           model: params['model'],
-          messages: [
-            { "role": "system", "content": "假设你是个产品设计师，需要根据用户描述给出设计方案、功能提示文案和免责文案" },
-            { "role": "system", "content": "以markdown格式返回" },
-            { "role": "user", "content": params['content'] }
-          ],
+          messages: message,
           temperature: params['temperature'],
           stream: proc do |chunk, _bytesize|
             sse.write chunk #.dig("choices", 0, "delta", "content")

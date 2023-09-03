@@ -9,6 +9,13 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :prompts do
+        collection do
+          get 'default' => 'prompts#get_default_prompt'
+          post 'default' => 'prompts#set_default_prompt'
+        end
+      end
+
       # match "*path", to: "api#gone", via: :all
       resources :completions do
         collection do

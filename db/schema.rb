@@ -10,9 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_03_143123) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_03_023450) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "api_v1_prompts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_api_v1_prompts_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false
@@ -33,6 +41,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_03_143123) do
     t.json "tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "default_prompt_id", comment: "用户的默认 prompt"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

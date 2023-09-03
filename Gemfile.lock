@@ -194,6 +194,7 @@ DEPENDENCIES
   devise
   devise_token_auth
   dotenv-rails
+  faraday
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.4)

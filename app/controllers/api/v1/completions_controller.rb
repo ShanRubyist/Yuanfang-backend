@@ -1,4 +1,4 @@
-require "ruby/openai"
+require 'bot'
 
 class Api::V1::CompletionsController < ApplicationController
   include ActionController::Live
@@ -9,37 +9,27 @@ class Api::V1::CompletionsController < ApplicationController
 
   def achieve
     raise 'content can not be empty' unless params['content'].present?
-    params['model'] ||= "gpt-3.5-turbo"
-    params['temperature'] ||= 1
 
     response.headers["Content-Type"] = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
+
+    case params['site']
+    when 'openai'
+      client = openai_client_for_openai
+    when 'api2d'
+      client = openai_client_for_api2d
+    when 'ai.ls'
+      client = openai_client_for_ails
+    else
+      client = openai_client_for_api2d
+    end
+
+    prompt = Api::V1::Prompt.find(params['prompt_id']) rescue nil
+
     begin
-      case params['site']
-      when 'openai'
-        client = openai_client_for_openai
-      when 'api2d'
-        client = openai_client_for_api2d
-      when 'ai.ls'
-        client = openai_client_for_ails
-      else
-        client = openai_client_for_api2d
+      client.completion(params['content'], prompt&.content) do |chunk|
+        sse.write chunk
       end
-
-      message = []
-      prompt = Prompt.find(params['prompt_id']) rescue nil
-      message.push({ "role": "system", "content": prompt.content }) if prompt
-      message.push({ "role": "user", "content": params['content'] })
-
-      client.chat(
-        parameters: {
-          model: params['model'],
-          messages: message,
-          temperature: params['temperature'],
-          stream: proc do |chunk, _bytesize|
-            sse.write chunk #.dig("choices", 0, "delta", "content")
-          end
-        })
     rescue => e
       render json: e.to_json, status: 500
     ensure
@@ -49,31 +39,21 @@ class Api::V1::CompletionsController < ApplicationController
 
   private
 
-  def openai_client(access_token, uri_base = 'https://api.openai.com/', organization_id = '', request_timeout = 240)
-    OpenAI.configure do |config|
-      config.access_token = access_token
-      config.uri_base = uri_base
-      config.organization_id = organization_id
-      config.request_timeout = request_timeout
-    end
-
-    OpenAI::Client.new
-  end
-
-  def openai_client_for_openai
-    @openai_client_for_openai ||= openai_client(ENV.fetch("OPENAI_API_KEY"), ENV.fetch("OPENAI_API_BASE_URL"), ENV.fetch("OPENAI_ORGANIZATION_ID"))
-  end
-
-  def openai_client_for_ails
-    @openai_client_for_ails ||= openai_client(ENV.fetch("AILS_API_KEY"), ENV.fetch("AILS_API_BASE_URL"), ENV.fetch("OPENAI_ORGANIZATION_ID"))
-  end
-
-  def openai_client_for_api2d
-    @openai_client_for_api2d ||= openai_client(ENV.fetch("API2D_API_KEY"), ENV.fetch("API2D_API_BASE_URL"), ENV.fetch("OPENAI_ORGANIZATION_ID"))
-  end
-
   def sse
     # @sse ||= SSE.new(response.stream, event: "openai", retry: 3000)
     @sse ||= SSE.new(response.stream)
+  end
+
+  def openai_client_for_openai
+    @openai_client_for_openai ||=
+      Bot::OpenAI.new(ENV.fetch("OPENAI_API_KEY"), ENV.fetch("OPENAI_API_BASE_URL"), ENV.fetch("OPENAI_ORGANIZATION_ID"))
+  end
+
+  def openai_client_for_ails
+    @openai_client_for_ails ||= Bot::OpenAI.new(ENV.fetch("AILS_API_KEY"), ENV.fetch("AILS_API_BASE_URL"))
+  end
+
+  def openai_client_for_api2d
+    @openai_client_for_api2d ||= Bot::OpenAI.new(ENV.fetch("API2D_API_KEY"), ENV.fetch("API2D_API_BASE_URL"))
   end
 end

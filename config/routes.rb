@@ -22,6 +22,12 @@ Rails.application.routes.draw do
           post 'achieve' => 'completions#achieve', as: 'achieve'
         end
       end
+
+      resources :info do
+        collection do
+          get 'models' => "info#models", as: 'models'
+        end
+      end
     end
   end
 

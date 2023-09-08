@@ -1,13 +1,14 @@
 require "ruby/openai"
 
 module Bot
-  class OpenAI
+  class Openai < AIModel
     def initialize(api_key, api_base_url = 'https://api.openai.com/', organization_id = '')
       @client = openai_client(api_key, api_base_url, organization_id)
+      @model = 'gpt-3.5-turbo'
     end
 
-    def completion(content, prompt = nil, options = {}, &block)
-      @model = options.fetch(:model, 'gpt-3.5-turbo')
+    def handle(content, prompt = nil, options = {}, &block)
+      @model = options.fetch(:model, @model)
       @temperature = options.fetch(:temperature, 1)
       @top_p = options.fetch(:top_p, 1)
       @stream = options.fetch(:stream, true)
@@ -16,14 +17,14 @@ module Bot
       message.push({ "role": "system", "content": prompt }) if prompt
       message.push({ "role": "user", "content": content })
 
-      stream = proc { |chunk, _bytesize| yield chunk } if @stream
       @client.chat(
         parameters: {
           model: @model,
           messages: message,
           temperature: @temperature,
-          stream: stream
-        })
+          top_p: @top_p,
+          stream: block # =proc { |chunk, _bytesize| puts chunk }
+      })
     end
 
     private

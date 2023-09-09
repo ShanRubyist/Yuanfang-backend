@@ -4,6 +4,10 @@ class Api::V1::CompletionsController < ApplicationController
   include ActionController::Live
   include ModelMap
 
+  rescue_from RuntimeError do |e|
+    render json: { error: e }.to_json, status: 500
+  end
+
   before_action :authenticate_user!
   around_action :limit_operations, only: [:achieve]
 

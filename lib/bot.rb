@@ -7,7 +7,8 @@ module Bot
 
     def completion(message, prompt = nil, options = {}, &block)
       handle(message, prompt, options) do |chunk, _bytesize|
-        yield resp(chunk) if @stream
+        rst = resp(chunk)
+        yield rst if @stream && rst
       end
     end
 

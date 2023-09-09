@@ -58,12 +58,12 @@ module Bot
     end
 
     def resp(data)
-      rst = {}
+      rst = nil
 
       data.scan(/(?:data|error): (\{.*\})/i).flatten.each do |data|
-        # return if data == '{}'
-
         msg = JSON.parse(data)
+        return if msg.empty?
+
         rst = {
           "id": msg['id'],
           "object": msg['object'],

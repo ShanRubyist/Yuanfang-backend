@@ -16,7 +16,13 @@ module ModelMap
         { model: 'llama_70b(baidu)', instance: llama_70b_client, default: true },
         { model: '文心一言(baidu)', instance: llama_ernie_bot_client, default: true },
         { model: '文心一言turbo(baidu)', instance: llama_ernie_bot_turbo_client, default: true },
-        { model: 'MiniMax', instance: mini_max_client, default: true },
+        { model: 'MiniMax', instance: mini_max_client, default: false },
+        { model: 'llama_7b(theb.ai)', instance: thebai_llama_7b_client, default: false },
+        { model: 'llama_13b(theb.ai)', instance: thebai_llama_13b_client, default: false },
+        { model: 'llama_70b(theb.ai)', instance: thebai_llama_70b_client, default: false },
+        { model: 'claude 2(theb.ai)', instance: thebai_claude_2_client, default: false },
+        { model: 'claude 1 100k(theb.ai)', instance: thebai_claude_1_100k_client, default: false },
+        { model: 'search(theb.ai)', instance: thebai_search_client, default: false },
       ]
     end
   end
@@ -64,6 +70,30 @@ module ModelMap
 
     def mini_max_client
       Bot::MiniMax.new(ENV.fetch("MINIMAX_GROUP_ID"), ENV.fetch("MINIMAX_SECRET_KEY"), ENV.fetch("MINIMAX_API_BASE_URL"))
+    end
+
+    def thebai_llama_7b_client
+      Bot::ThebaiLlama7b.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
+    end
+
+    def thebai_llama_13b_client
+      Bot::ThebaiLlama13b.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
+    end
+
+    def thebai_llama_70b_client
+      Bot::ThebaiLlama70b.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
+    end
+
+    def thebai_claude_2_client
+      Bot::ClaudeTwo.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
+    end
+
+    def thebai_claude_1_100k_client
+      Bot::ClaudeOneOneHundredK.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
+    end
+
+    def thebai_search_client
+      Bot::Search.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
     end
   end
 end

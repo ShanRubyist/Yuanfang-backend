@@ -14,6 +14,7 @@ module ModelMap
         { model: 'llama_7b(baidu)', instance: llama_7b_client, default: true },
         { model: 'llama_13b(baidu)', instance: llama_13b_client, default: true },
         { model: 'llama_70b(baidu)', instance: llama_70b_client, default: true },
+        { model: '文心一言4(baidu)', instance: llama_ernie_bot_four_client, default: true },
         { model: '文心一言(baidu)', instance: llama_ernie_bot_client, default: true },
         { model: '文心一言turbo(baidu)', instance: llama_ernie_bot_turbo_client, default: true },
         { model: 'MiniMax', instance: mini_max_client, default: false },
@@ -58,6 +59,10 @@ module ModelMap
 
     def llama_70b_client
       Bot::Llama70b.new(ENV.fetch("BAIDU_API_KEY"), ENV.fetch("BAIDU_SECRET_KEY"), ENV.fetch("BAIDU_API_BASE_URL"))
+    end
+
+    def llama_ernie_bot_four_client
+      Bot::ErnieBotFour.new(ENV.fetch("BAIDU_API_KEY"), ENV.fetch("BAIDU_SECRET_KEY"), ENV.fetch("BAIDU_API_BASE_URL"))
     end
 
     def llama_ernie_bot_client

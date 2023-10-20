@@ -66,7 +66,7 @@ module Bot
               "index": choices_message['index'],
               "delta": {
                 "role": choices_message['role'],
-                "content": choices_message['content']
+                "content": choices_message['content'] ? choices_message['content'] : ''
               },
               "finish_reason": choices_finish_reason
             }

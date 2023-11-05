@@ -58,8 +58,10 @@ module Bot
     end
 
     def resp(data)
-      rst = []
+      # 接口返回的 HTTP STATUS 还是 200，只能根据返回内容判断
+      fail data unless data.scan(/error_code/).empty?
 
+      rst = []
       data.scan(/(?:data|error):\s*(\{.*\})/i).flatten.each do |data|
         msg = JSON.parse(data)
         return if msg.empty?

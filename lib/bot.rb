@@ -6,9 +6,16 @@ module Bot
     end
 
     def completion(message, prompt = nil, options = {}, &block)
-      handle(message, prompt, options) do |chunk, _bytesize|
+      handle(message, prompt, options) do |chunk, _overall_received_bytes, _env|
+        fail chunk.to_s if _env && _env.status != 200
+
         if @stream
-          resp(chunk).each { |item| yield item }
+          rst = resp(chunk)
+          if rst.is_a?(Array)
+            rst.each { |item| yield item }
+          elsif rst
+            yield rst
+          end
         end
       end
     end
@@ -16,7 +23,7 @@ module Bot
     private
 
     def resp(msg)
-      [msg]
+      msg
     end
   end
 end

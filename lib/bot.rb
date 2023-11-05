@@ -7,15 +7,16 @@ module Bot
 
     def completion(message, prompt = nil, options = {}, &block)
       handle(message, prompt, options) do |chunk, _bytesize|
-        rst = resp(chunk)
-        yield rst if @stream && rst
+        if @stream
+          resp(chunk).each { |item| yield item }
+        end
       end
     end
 
     private
 
     def resp(msg)
-      msg
+      [msg]
     end
   end
 end
@@ -35,3 +36,5 @@ require 'bots/thebai/llama_70b'
 require 'bots/thebai/claude_two'
 require 'bots/thebai/claude_one_one_hundred_k'
 require 'bots/thebai/search'
+require 'bots/ali/qwen_plus'
+require 'bots/ali/qwen_turbo'

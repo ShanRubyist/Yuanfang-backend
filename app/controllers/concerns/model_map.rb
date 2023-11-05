@@ -11,19 +11,21 @@ module ModelMap
         { model: 'gpt-3.5-turbo(ai.ls)', instance: ails_35_client, default: true },
         { model: 'gpt-4(api2d.net)', instance: api2d_40_client, default: false },
         { model: 'gpt-4(ai.ls)', instance: ails_40_client, default: false },
-        { model: 'llama_7b(baidu)', instance: llama_7b_client, default: true },
-        { model: 'llama_13b(baidu)', instance: llama_13b_client, default: true },
-        { model: 'llama_70b(baidu)', instance: llama_70b_client, default: true },
-        { model: '文心一言4(baidu)', instance: llama_ernie_bot_four_client, default: true },
-        { model: '文心一言(baidu)', instance: llama_ernie_bot_client, default: true },
-        { model: '文心一言turbo(baidu)', instance: llama_ernie_bot_turbo_client, default: true },
-        { model: 'MiniMax', instance: mini_max_client, default: false },
-        { model: 'llama_7b(theb.ai)', instance: thebai_llama_7b_client, default: false },
-        { model: 'llama_13b(theb.ai)', instance: thebai_llama_13b_client, default: false },
-        { model: 'llama_70b(theb.ai)', instance: thebai_llama_70b_client, default: false },
         { model: 'claude 2(theb.ai)', instance: thebai_claude_2_client, default: false },
         { model: 'claude 1 100k(theb.ai)', instance: thebai_claude_1_100k_client, default: false },
         { model: 'search(theb.ai)', instance: thebai_search_client, default: false },
+        { model: 'MiniMax', instance: mini_max_client, default: false },
+        { model: '文心一言4(baidu)', instance: llama_ernie_bot_four_client, default: true },
+        { model: '文心一言(baidu)', instance: llama_ernie_bot_client, default: true },
+        { model: '文心一言turbo(baidu)', instance: llama_ernie_bot_turbo_client, default: true },
+        { model: '通义千问', instance: qwen_plus_client, default: true },
+        { model: '通义千问turbo', instance: qwen_turbo_client, default: true },
+        { model: 'llama_7b(baidu)', instance: llama_7b_client, default: true },
+        { model: 'llama_13b(baidu)', instance: llama_13b_client, default: true },
+        { model: 'llama_70b(baidu)', instance: llama_70b_client, default: true },
+        { model: 'llama_7b(theb.ai)', instance: thebai_llama_7b_client, default: false },
+        { model: 'llama_13b(theb.ai)', instance: thebai_llama_13b_client, default: false },
+        { model: 'llama_70b(theb.ai)', instance: thebai_llama_70b_client, default: false },
       ]
     end
   end
@@ -99,6 +101,14 @@ module ModelMap
 
     def thebai_search_client
       Bot::Search.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
+    end
+
+    def qwen_plus_client
+      Bot::QwenPlus.new(ENV.fetch("ALI_API_KEY"), ENV.fetch("ALI_API_BASE_URL"))
+    end
+
+    def qwen_turbo_client
+      Bot::QwenTurbo.new(ENV.fetch("ALI_API_KEY"), ENV.fetch("ALI_API_BASE_URL"))
     end
   end
 end

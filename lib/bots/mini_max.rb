@@ -58,9 +58,9 @@ module Bot
     end
 
     def resp(data)
-      rst = nil
+      rst = []
 
-      data.scan(/(?:data|error): (\{.*\})/i).flatten.each do |data|
+      data.scan(/(?:data|error):\s*(\{.*\})/i).flatten.each do |data|
         msg = JSON.parse(data)
 
         return unless msg && msg.present?
@@ -69,7 +69,7 @@ module Bot
         choices_message = choices&.first&.fetch('messages', [{}])&.first
         choices_finish_reason = choices&.first&.fetch('finish_reason', nil)
 
-        rst = {
+        rst << {
           "id": msg['id'],
           "object": msg['object'],
           "created": msg['created'],

@@ -46,17 +46,15 @@ module Bot
     end
 
     def resp(data)
-      rst = nil
-
-      data.scan(/(?:data|error): (\{.*\})/i).flatten.each do |data|
+      rst = []
+      data.scan(/(?:data|error):\s*(\{.*\})/i).flatten.each do |data|
         msg = JSON.parse(data)
         return if msg.empty?
-
         choices = msg['choices']
         choices_message = choices&.first&.fetch('delta', {})
         choices_finish_reason = choices&.first&.fetch('finish_reason', nil)
 
-        rst = {
+        rst << {
           "id": msg['id'],
           "object": msg['object'],
           "created": msg['created'],

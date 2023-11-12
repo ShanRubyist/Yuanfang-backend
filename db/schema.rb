@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_03_023450) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_12_010243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "achieve_answers", force: :cascade do |t|
+    t.bigint "achieve_question_id", null: false
+    t.string "site", null: false
+    t.text "respond"
+    t.json "original_respond"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["achieve_question_id"], name: "index_achieve_answers_on_achieve_question_id"
+  end
+
+  create_table "achieve_questions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.uuid "achieve_id", null: false
+    t.text "question", null: false
+    t.text "prompt"
+    t.json "origin_params"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["achieve_id"], name: "index_achieve_questions_on_achieve_id"
+    t.index ["user_id"], name: "index_achieve_questions_on_user_id"
+  end
 
   create_table "api_v1_prompts", force: :cascade do |t|
     t.bigint "user_id", null: false

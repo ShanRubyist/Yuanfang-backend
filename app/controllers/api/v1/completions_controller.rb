@@ -14,8 +14,12 @@ class Api::V1::CompletionsController < ApplicationController
   attr_reader :sse
 
   def achieve
-    raise 'content can not be empty' unless params['content'].present?
-    raise 'site can not be empty' unless params['site'].present?
+    question = params['content']
+    site = params['site']
+    achieve_id = params['achieve_id'] || SecureRandom.uuid
+
+    raise 'content can not be empty' unless question.present?
+    raise 'site can not be empty' unless site.present?
 
     response.headers["Content-Type"] = "text/event-stream"
     response.headers["Last-Modified"] = Time.now.httpdate
@@ -28,17 +32,53 @@ class Api::V1::CompletionsController < ApplicationController
     prompt = Api::V1::Prompt.find(params['prompt_id']) rescue nil
 
     options = {}
+    total_answer = []
+    total_original_answer = []
 
     begin
-      client.completion(params['content'], prompt&.content, options) do |chunk|
+      client.completion(question, prompt&.content, options) do |chunk, original_chunk|
         sse.write chunk
+
+        total_answer << chunk.transform_keys(&:to_sym)[:choices]
+                          .first
+                          .transform_keys(&:to_sym)[:delta]
+                          .transform_keys(&:to_sym)[:content] rescue nil
+
+        total_original_answer << original_chunk
       end
     ensure
+      save_achieve_to_db({ achieve_id: achieve_id,
+                           question: question,
+                           prompt: prompt.content,
+                           params: params,
+                           site: site,
+                           total_answer: total_answer.join,
+                           total_original_answer: total_original_answer.to_s
+                         })
+
       @sse.close rescue nil
     end
   end
 
   private
+
+  def save_achieve_to_db(h)
+    achieve_id = h.fetch(:achieve_id)
+    question = h.fetch(:question)
+    prompt = h.fetch(:prompt)
+    params = h.fetch(:params)
+    site = h.fetch(:site)
+    total_answer = h.fetch(:total_answer)
+    total_original_answer = h.fetch(:total_original_answer)
+
+    achieve_question = current_user
+                         .achieve_questions
+                         .create_with(question: question, prompt: prompt, origin_params: params)
+                         .find_or_create_by(achieve_id: achieve_id)
+
+    achieve_question.achieve_answers
+                    .create({ site: site, respond: total_answer, original_respond: total_original_answer })
+  end
 
   def sse
     # @sse ||= SSE.new(response.stream, event: "openai", retry: 3000)

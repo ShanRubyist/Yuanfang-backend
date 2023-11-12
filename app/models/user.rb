@@ -8,4 +8,5 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :api_v1_prompts, :class_name => 'Api::V1::Prompt'
+  has_many :achieve_questions
 end

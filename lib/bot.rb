@@ -12,9 +12,9 @@ module Bot
         if @stream
           rst = resp(chunk)
           if rst.is_a?(Array)
-            rst.each { |item| yield item }
+            rst.each { |item| yield item, chunk }
           elsif rst
-            yield rst
+            yield rst, chunk
           end
         end
       end

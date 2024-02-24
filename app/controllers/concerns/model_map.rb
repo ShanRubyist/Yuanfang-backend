@@ -16,7 +16,7 @@ module ModelMap
         { model: 'claude 2(theb.ai)', instance: thebai_claude_2_client, default: false },
         { model: 'claude 2(智增增)', instance: smarttrot_claude_2_client, default: false },
         { model: 'claude 1 100k(theb.ai)', instance: thebai_claude_1_100k_client, default: false },
-        { model: 'claude 1 100k(智增增)', instance: smarttrot_claude_2_client, default: false },
+        { model: 'claude 1 100k(智增增)', instance: smarttrot_claude_1_client, default: false },
         { model: 'search(theb.ai)', instance: thebai_search_client, default: false },
         { model: 'MiniMax', instance: mini_max_client, default: false },
         { model: '文心一言4(baidu)', instance: llama_ernie_bot_four_client, default: true },

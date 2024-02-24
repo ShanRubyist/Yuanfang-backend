@@ -27,6 +27,7 @@ module ModelMap
         { model: 'llama_13b(theb.ai)', instance: thebai_llama_13b_client, default: false },
         { model: 'llama_70b(theb.ai)', instance: thebai_llama_70b_client, default: false },
         { model: 'moonshot_v1_8k', instance: moonshot_v1_8k_client, default: false },
+        { model: 'gemini_v1_pro', instance: gemini_v1_pro_client, default: false },
       ]
     end
   end
@@ -114,6 +115,10 @@ module ModelMap
 
     def moonshot_v1_8k_client
       Bot::V18k.new(ENV.fetch("MOONSHOT_API_KEY"), ENV.fetch("MOONSHOT_API_BASE_URL"))
+    end
+
+    def gemini_v1_pro_client
+      Bot::V1Pro.new(ENV.fetch("GEMINI_API_KEY"), ENV.fetch("GEMINI_API_BASE_URL"))
     end
   end
 end

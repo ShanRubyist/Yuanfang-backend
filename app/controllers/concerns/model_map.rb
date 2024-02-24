@@ -19,7 +19,8 @@ module ModelMap
         { model: 'claude 1 100k(智增增)', instance: smarttrot_claude_1_client, default: false },
         { model: 'search(theb.ai)', instance: thebai_search_client, default: false },
         { model: 'MiniMax', instance: mini_max_client, default: false },
-        { model: '文心一言4(baidu)', instance: llama_ernie_bot_four_client, default: true },
+        { model: '文心一言4(baidu)', instance: llama_ernie_bot_four_client, default: false },
+        { model: '文心一言4(智增增)', instance: smarttrot_ernie_bot_4_client, default: true },
         { model: '文心一言(baidu)', instance: llama_ernie_bot_client, default: true },
         { model: '文心一言turbo(baidu)', instance: llama_ernie_bot_turbo_client, default: true },
         { model: '通义千问', instance: qwen_plus_client, default: true },
@@ -139,6 +140,10 @@ module ModelMap
 
     def smarttrot_claude_2_client
       Bot::Smarttrot::Cloude_2_100k.new(ENV.fetch("SMARTTROT_API_KEY"), ENV.fetch("SMARTTROT_API_BASE_URL"))
+    end
+
+    def smarttrot_ernie_bot_4_client
+      Bot::Smarttrot::ERNIEBot4.new(ENV.fetch("SMARTTROT_API_KEY"), ENV.fetch("SMARTTROT_API_BASE_URL"))
     end
   end
 end

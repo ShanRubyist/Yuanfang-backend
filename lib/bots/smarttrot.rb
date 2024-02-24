@@ -3,10 +3,10 @@ require 'faraday'
 module Bot
   module Smarttrot
     class Smarttrot < AIModel
-      def initialize(api_key, api_base_url = 'https://flag.smarttrot.com/')
+      def initialize(api_key, api_base_url = 'https://flag.smarttrot.com')
         @api_key = api_key
         @api_base_url = api_base_url
-        @path = 'v1/chat/completions'
+        @path = '/v1/chat/completions'
       end
 
       def handle(message, prompt = nil, options = {}, &block)

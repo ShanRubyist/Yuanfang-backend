@@ -47,3 +47,8 @@ require 'bots/ali/qwen_plus'
 require 'bots/ali/qwen_turbo'
 require 'bots/moonshot/v1_8k'
 require 'bots/gemini/v1_pro'
+require 'bots/smarttrot/gpt_3.5'
+require 'bots/smarttrot/gpt_4'
+require 'bots/smarttrot/claude_1'
+require 'bots/smarttrot/claude_2'
+

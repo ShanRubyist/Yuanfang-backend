@@ -6,13 +6,17 @@ module ModelMap
   included do |base|
     base.class_eval do
       MODEL_NAME_2_INSTANCE = [
-        { model: 'gpt-3.5-turbo(openai)', instance: openai_35_client, default: false },
+      { model: 'gpt-3.5-turbo(openai)', instance: openai_35_client, default: false },
         { model: 'gpt-3.5-turbo(api2d.net)', instance: api2d_35_client, default: true },
-        { model: 'gpt-3.5-turbo(ai.ls)', instance: ails_35_client, default: true },
+        { model: 'gpt-3.5-turbo(ai.ls)', instance: ails_35_client, default: false },
+        { model: 'gpt-3.5-turbo(智增增)', instance: smarttrot_gpt_3_5_client, default: false },
         { model: 'gpt-4(api2d.net)', instance: api2d_40_client, default: false },
         { model: 'gpt-4(ai.ls)', instance: ails_40_client, default: false },
+        { model: 'gpt-4(智增增)', instance: smarttrot_gpt_4_0_client, default: false },
         { model: 'claude 2(theb.ai)', instance: thebai_claude_2_client, default: false },
+        { model: 'claude 2(智增增)', instance: smarttrot_claude_2_client, default: false },
         { model: 'claude 1 100k(theb.ai)', instance: thebai_claude_1_100k_client, default: false },
+        { model: 'claude 1 100k(智增增)', instance: smarttrot_claude_2_client, default: false },
         { model: 'search(theb.ai)', instance: thebai_search_client, default: false },
         { model: 'MiniMax', instance: mini_max_client, default: false },
         { model: '文心一言4(baidu)', instance: llama_ernie_bot_four_client, default: true },
@@ -119,6 +123,22 @@ module ModelMap
 
     def gemini_v1_pro_client
       Bot::V1Pro.new(ENV.fetch("GEMINI_API_KEY"), ENV.fetch("GEMINI_API_BASE_URL"))
+    end
+
+    def smarttrot_gpt_3_5_client
+      Bot::Smarttrot::Gpt3_5.new(ENV.fetch("SMARTTROT_API_KEY"), ENV.fetch("SMARTTROT_API_BASE_URL"))
+    end
+
+    def smarttrot_gpt_4_0_client
+      Bot::Smarttrot::Gpt4.new(ENV.fetch("SMARTTROT_API_KEY"), ENV.fetch("SMARTTROT_API_BASE_URL"))
+    end
+
+    def smarttrot_claude_1_client
+      Bot::Smarttrot::Cloude_1_100k.new(ENV.fetch("SMARTTROT_API_KEY"), ENV.fetch("SMARTTROT_API_BASE_URL"))
+    end
+
+    def smarttrot_claude_2_client
+      Bot::Smarttrot::Cloude_2_100k.new(ENV.fetch("SMARTTROT_API_KEY"), ENV.fetch("SMARTTROT_API_BASE_URL"))
     end
   end
 end

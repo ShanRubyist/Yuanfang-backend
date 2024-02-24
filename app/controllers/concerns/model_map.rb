@@ -26,6 +26,7 @@ module ModelMap
         { model: 'llama_7b(theb.ai)', instance: thebai_llama_7b_client, default: false },
         { model: 'llama_13b(theb.ai)', instance: thebai_llama_13b_client, default: false },
         { model: 'llama_70b(theb.ai)', instance: thebai_llama_70b_client, default: false },
+        { model: 'moonshot_v1_8k', instance: moonshot_v1_8k_client, default: false },
       ]
     end
   end
@@ -109,6 +110,10 @@ module ModelMap
 
     def qwen_turbo_client
       Bot::QwenTurbo.new(ENV.fetch("ALI_API_KEY"), ENV.fetch("ALI_API_BASE_URL"))
+    end
+
+    def moonshot_v1_8k_client
+      Bot::V18k.new(ENV.fetch("MOONSHOT_API_KEY"), ENV.fetch("MOONSHOT_API_BASE_URL"))
     end
   end
 end

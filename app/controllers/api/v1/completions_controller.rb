@@ -49,7 +49,7 @@ class Api::V1::CompletionsController < ApplicationController
     ensure
       save_achieve_to_db({ achieve_id: achieve_id,
                            question: question,
-                           prompt: prompt.content,
+                           prompt: prompt&.content,
                            params: params,
                            site: site,
                            total_answer: total_answer.join,
@@ -95,11 +95,11 @@ class Api::V1::CompletionsController < ApplicationController
   end
 
   def hourly_cache_key
-    "user_hourly_achieve_#{current_user.id}"
+    "user_hourly_achieve_#{current_user.id}" if current_user
   end
 
   def daily_cache_key
-    "user_daily_achieve_#{current_user.id}"
+    "user_daily_achieve_#{current_user.id}" if current_user
   end
 
   def hourly_usage_count

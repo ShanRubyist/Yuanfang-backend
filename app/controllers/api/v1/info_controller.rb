@@ -26,6 +26,8 @@ class Api::V1::InfoController < ApplicationController
       created_at: current_user.created_at,
       updated_at: current_user.updated_at,
       credits: left_credits(current_user),
+      total_credits: total_credits(current_user),
+      total_used_credits: total_used_credits(current_user)
     }.to_json
   end
 

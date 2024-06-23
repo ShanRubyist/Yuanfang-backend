@@ -1,6 +1,6 @@
 require 'bot'
 
-class Api::V1::CompletionsController < ApplicationController
+class Api::V1::CompletionsController < UsageController
   include ActionController::Live
   include ModelMap
 

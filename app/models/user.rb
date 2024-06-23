@@ -9,4 +9,6 @@ class User < ActiveRecord::Base
 
   has_many :api_v1_prompts, :class_name => 'Api::V1::Prompt'
   has_many :achieve_questions
+
+  pay_customer default_payment_processor: ENV.fetch('PAYMENT_PROCESSOR').to_sym
 end

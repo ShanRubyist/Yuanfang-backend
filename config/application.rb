@@ -29,8 +29,34 @@ module YuanfangBackend
     # This also configures session_options for use below
     config.session_store :cookie_store, key: '_interslice_session'
 
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV['SMTP_ADDRESS'],
+      port: ENV['SMTP_PORT'],
+      domain: ENV['SMTP_DOMAIN'],
+      user_name: ENV['SMTP_USERNAME'],
+      password: ENV['SMTP_PASSWORD'],
+      authentication: :login,
+      enable_startttls_auto: ENV['SMTP_STARTTTLS_AUTO'],
+      tls: ENV['SMTP_SSL'] == 'true' ? true : false
+    }
+
+    config.action_mailer.default_options = {
+      from: "#{ENV['SITE_NAME']} <#{ENV['EMAIL_FROM']}>",
+      reply_to: ENV['REPLY_TO']
+    }
+
     # Required for all session management (regardless of session_store)
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
+
+    config.generators do |generate|
+      generate.orm :active_record, primary_key_type: :uuid
+    end
+
+    config.active_job.queue_adapter = :sidekiq
+
+    # fix ActionController::Redirecting::UnsafeRedirectError (pass allow_other_host: true to redirect anyway.)
+    config.action_controller.raise_on_open_redirects = false
   end
 end

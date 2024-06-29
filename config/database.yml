@@ -85,6 +85,6 @@ test:
 #
 production:
   <<: *default
-  database: <%= ENV.fetch('PRODUCT_DATABASE_NAME') { 'yuanfang_production' } %>
+  database: <%= ENV.fetch('PRODUCTION_DATABASE_NAME') { 'yuanfang_production' } %>
   username: <%= ENV["DATABASE_USERNAME"] %>
   password: <%= ENV["DATABASE_PASSWORD"] %>

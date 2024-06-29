@@ -15,18 +15,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_14_054955) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "achieve_answers", force: :cascade do |t|
-    t.bigint "achieve_question_id", null: false
+  create_table "achieve_answers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "achieve_question", null: false
     t.string "site", null: false
     t.text "respond"
     t.json "original_respond"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["achieve_question_id"], name: "index_achieve_answers_on_achieve_question_id"
   end
 
-  create_table "achieve_questions", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "achieve_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user", null: false
     t.uuid "achieve_id", null: false
     t.text "question", null: false
     t.text "prompt"
@@ -34,15 +33,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_14_054955) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["achieve_id"], name: "index_achieve_questions_on_achieve_id"
-    t.index ["user_id"], name: "index_achieve_questions_on_user_id"
   end
 
-  create_table "api_v1_prompts", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "api_v1_prompts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user", null: false
     t.string "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_api_v1_prompts_on_user_id"
   end
 
   create_table "pay_charges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -136,7 +133,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_14_054955) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -155,7 +152,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_14_054955) do
     t.json "tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "default_prompt_id", comment: "用户的默认 prompt"
+    t.uuid "default_prompt_id", comment: "用户的默认 prompt"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

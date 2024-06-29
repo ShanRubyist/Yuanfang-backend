@@ -50,7 +50,7 @@ module Bot
 
         rst = []
         data.scan(/(?:data|error):\s*(\{.*\})/i).flatten.each do |data|
-          puts data
+          # puts data
 
           msg = JSON.parse(data)
           return if msg.empty?

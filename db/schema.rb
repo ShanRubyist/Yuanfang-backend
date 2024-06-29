@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_14_054955) do
   enable_extension "plpgsql"
 
   create_table "achieve_answers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "achieve_question", null: false
+    t.uuid "achieve_question_id", null: false
     t.string "site", null: false
     t.text "respond"
     t.json "original_respond"
@@ -25,7 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_14_054955) do
   end
 
   create_table "achieve_questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user", null: false
+    t.uuid "user_id", null: false
     t.uuid "achieve_id", null: false
     t.text "question", null: false
     t.text "prompt"
@@ -36,7 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_14_054955) do
   end
 
   create_table "api_v1_prompts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user", null: false
+    t.uuid "user_id", null: false
     t.string "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

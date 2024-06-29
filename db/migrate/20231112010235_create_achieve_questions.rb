@@ -1,7 +1,7 @@
 class CreateAchieveQuestions < ActiveRecord::Migration[7.0]
   def change
     create_table :achieve_questions, id: :uuid, default: -> { "gen_random_uuid()" } do |t|
-      t.uuid :user, null: false
+      t.uuid :user_id, null: false
       t.uuid :achieve_id, null: false
       t.text :question, null: false
       t.text :prompt

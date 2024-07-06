@@ -13,6 +13,7 @@ module ModelMap
         { model: 'gpt-4(api2d.net)', instance: api2d_40_client, default: false },
         { model: 'gpt-4(ai.ls)', instance: ails_40_client, default: false },
         { model: 'gpt-4(智增增)', instance: smarttrot_gpt_4_0_client, default: false },
+        { model: 'claude 3.5 Sonnet(theb.ai)', instance: thebai_claude_sonnet_client, default: false },
         { model: 'claude 2(theb.ai)', instance: thebai_claude_2_client, default: false },
         { model: 'claude 2(智增增)', instance: smarttrot_claude_2_client, default: false },
         { model: 'claude 1 100k(theb.ai)', instance: thebai_claude_1_100k_client, default: false },
@@ -96,6 +97,10 @@ module ModelMap
 
     def thebai_llama_70b_client
       Bot::ThebaiLlama70b.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
+    end
+
+    def thebai_claude_sonnet_client
+      Bot::ClaudeSonnet.new(ENV.fetch("THEBAI_API_KEY"), ENV.fetch("THEBAI_API_BASE_URL"))
     end
 
     def thebai_claude_2_client

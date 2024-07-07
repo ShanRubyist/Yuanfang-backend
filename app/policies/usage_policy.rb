@@ -25,7 +25,7 @@ class UsagePolicy < ApplicationPolicy
   end
 
   def has_left_credits?
-    left_credits(@user) >= 0
+    left_credits(@user) > 0
   end
 
   def credits_enough?

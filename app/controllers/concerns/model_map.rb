@@ -13,6 +13,7 @@ module ModelMap
         { model: 'gpt-4(api2d.net)', instance: api2d_40_client, default: false },
         { model: 'gpt-4(ai.ls)', instance: ails_40_client, default: false },
         { model: 'gpt-4(智增增)', instance: smarttrot_gpt_4_0_client, default: false },
+        { model: 'claude 3.5 Sonnet(OpenRouter)', instance: openrouter_claude_sonnet_client, default: false },
         { model: 'claude 3.5 Sonnet(theb.ai)', instance: thebai_claude_sonnet_client, default: false },
         { model: 'claude 2(theb.ai)', instance: thebai_claude_2_client, default: false },
         { model: 'claude 2(智增增)', instance: smarttrot_claude_2_client, default: false },
@@ -149,6 +150,10 @@ module ModelMap
 
     def smarttrot_ernie_bot_4_client
       Bot::Smarttrot::ERNIEBot4.new(ENV.fetch("SMARTTROT_API_KEY"), ENV.fetch("SMARTTROT_API_BASE_URL"))
+    end
+
+    def openrouter_claude_sonnet_client
+      Bot::OpenRouter::ClaudeSonnet.new(ENV.fetch("OPENROUTER_API_KEY"), ENV.fetch("OPENROUTER_API_BASE_URL"))
     end
   end
 end

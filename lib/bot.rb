@@ -53,4 +53,5 @@ require 'bots/smarttrot/gpt_4'
 require 'bots/smarttrot/claude_1'
 require 'bots/smarttrot/claude_2'
 require 'bots/smarttrot/ernie_bot_4'
+require 'bots/open_router/claude_sonnet'
 
